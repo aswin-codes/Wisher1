@@ -25,6 +25,7 @@
     "rn-fetch-blob": "^0.12.0",
     "util": "^0.12.5",
     "uuid": "^9.0.0",
+    "uuid-int": "^3.1.0",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {

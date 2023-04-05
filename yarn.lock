@@ -8050,6 +8050,11 @@
   "resolved" "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz"
   "version" "1.0.1"
 
+"uuid-int@^3.1.0":
+  "integrity" "sha512-L+TdqlKbIwO6XxkqpoRkE+MohbL1y6TpEbdDKuxs0MQ2rpO/Hv7Ktp76VneGAbGJRfmwQgvUlRXD6jO0mCzD9Q=="
+  "resolved" "https://registry.npmjs.org/uuid-int/-/uuid-int-3.1.0.tgz"
+  "version" "3.1.0"
+
 "uuid@^9.0.0":
   "integrity" "sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg=="
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-9.0.0.tgz"
