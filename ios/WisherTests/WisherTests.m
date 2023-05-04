@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface Wisher1Tests : XCTestCase
+@interface WisherTests : XCTestCase
 
 @end
 
-@implementation Wisher1Tests
+@implementation WisherTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {

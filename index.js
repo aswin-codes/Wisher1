@@ -5,39 +5,17 @@ import App from './App';
 import {name as appName} from './app.json';
 import PushNotification from "react-native-push-notification";
 import  AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob';
 import Share from 'react-native-share';
 
-const FetchData = async () => {
-    setIsLoading(true);
-    try {
-      var stored = await AsyncStorage.getItem('data');
-      stored = JSON.parse(stored)
-      //console.log(stored.assets,1)
-      if ((stored == null) || (stored.assets == [])) {
-        console.log("No data inside local storage")//need to remove during production
-        setIsLoading(false);
-      }
-      else if (stored.assets == []) {
-        console.log("No data inside local storage but not first time")//need to remove during production
-        setIsLoading(false);
-      }
-      else {
-        console.log(stored.assets[0].key)
-      
-        setData(stored)
-        setIsLoading(false);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  const getBase64 = (key, list) => {
+
+  const getImage = (key, list) => {
     for (var i=0; i < list.length; i++){
       if (list[i].key == key)
-        return list[i].image;
+        return [list[i].image,list[i].media];
     }
   }
+
+  
 
   const setNotification = (key, thedate, title) => {
 
@@ -45,15 +23,34 @@ const FetchData = async () => {
     console.log(key, title);
     console.log(typeof (thedate));
 
-    PushNotification.localNotificationSchedule({
-      id: key,
-      channelId: "wisher",
-      title: title,
-      message: "Hey mate, you got wish remainder!",
-      date: thedate,
-      allowWhileIdle: true,
-      repeatType: "year"
-    });
+    if (thedate > new Date()){
+      console.log("Future");
+      PushNotification.localNotificationSchedule({
+        id: key,
+        channelId: "wisher",
+        title: title,
+        message: "Hey mate, you got wish remainder!",
+        date: thedate,
+        allowWhileIdle: true,
+        repeatType: "year"
+      });
+    }
+    else {
+      console.log("Past");
+      thedate.setFullYear(thedate.getFullYear()+1);
+      PushNotification.localNotificationSchedule({
+        id: key,
+        channelId: "wisher",
+        title: title,
+        message: "Hey mate, you got wish remainder!",
+        date: thedate,
+        allowWhileIdle: true,
+        repeatType: "year"
+      });
+
+    }
+
+    
     console.log("Scheduled Notification");
     // Notifications.scheduleNotificationAsync({
     //   identifier: key,
@@ -83,19 +80,10 @@ PushNotification.configure({
         setNotification(notification.id, date, notification.title);
         var stored = await AsyncStorage.getItem('data');
         stored = JSON.parse(stored)
-        var base64 = getBase64(notification.id, stored.assets);
-        //console.log(base64);
-        await AsyncStorage.setItem("myImage", base64);
-        const imageBase = await AsyncStorage.getItem('myImage');
-        //console.log(imageBase)
-        const imagePath = `${RNFetchBlob.fs.dirs.CacheDir}/myImage.jpg`;
-        await RNFetchBlob.fs.writeFile(imagePath, imageBase, 'base64')
-        .then((success) => {
-            console.log("File Written");
-          }).catch((e) => console.log(e))
-        var imageURI = "file:///"+imagePath;
-        console.log(imageURI)
-        Share.isPackageInstalled('com.instagram.android')
+        var [imageURI,media] = getImage(notification.id, stored.assets);
+        //console.log(imageURI);
+        if (media == "Instagram"){
+          Share.isPackageInstalled('com.instagram.android')
         .then(async ({ isInstalled }) => {
         if (isInstalled){
           await Share.shareSingle({
@@ -111,6 +99,10 @@ PushNotification.configure({
         
       })
         .catch((err) => console.error(err));
+        } else {
+          await Share.open({url: imageURI})
+        }
+        
         
         // await Share.shareSingle({
         //     stickerImage: imageURI,

@@ -1,6 +1,4 @@
-package com.wisher1;
-import cl.json.RNSharePackage;
-import cl.json.ShareApplication;
+package com.wisher;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
